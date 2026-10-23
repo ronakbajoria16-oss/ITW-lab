@@ -1,0 +1,247 @@
+/* User-supplied frontend design. Keep imports before all other rules. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+html, body, [class*="css"], .stApp, .stApp input, .stApp textarea, .stApp button {
+    font-family: 'Inter', sans-serif;
+}
+.stApp [data-testid="stMarkdownContainer"] :is(h1, h2, h3, p, a, li),
+.stApp :is(.topline, .hero, .cosmic-hero, .brand, .side-label, .side-foot, .footer),
+.stApp :is(.hero, .cosmic-hero) :is(h1, h2, p) {
+    font-family: 'Inter', sans-serif !important;
+}
+
+/* Streamlit integration: retain dashboard cards, charts, and form styling. */
+:root { --ink: #172d32; --muted: #6b8084; --green: #167a63; }
+.stApp { background: #f4f7f6; color: var(--ink); }
+[data-testid="stHeader"] { background: #f4f7f6ee; }
+.block-container { padding-top: 2rem; max-width: 1510px; padding-bottom: 3rem; }
+h1, h2, h3 { font-family: 'Inter', sans-serif; letter-spacing: -.035em; color: var(--ink); }
+h3 { font-size: 1.2rem !important; }
+[data-testid="stSidebar"] { background: #122e32; border-right: 1px solid #244247; }
+[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p,
+[data-testid="stSidebar"] [data-testid="stRadio"] p,
+[data-testid="stSidebar"] [data-testid="stSlider"] p,
+[data-testid="stSidebar"] [data-testid="stSliderTickBar"],
+[data-testid="stSidebar"] [data-testid="stDownloadButton"] p { color: #e2eeeb; }
+[data-testid="stSidebar"] [data-testid="stCaptionContainer"] p { color: #a6c1bd; }
+[data-testid="stSidebar"] [data-baseweb="slider"] [role="slider"] { background: #efbd59; }
+[data-testid="stSidebar"] button { background: #244449; border-color: #496265; color: #e2eeeb; }
+[data-testid="stSidebar"] button:hover { border-color: #efbd59; }
+[data-testid="stSidebar"] [data-testid="stFileUploader"] section { background: #244449; }
+[data-testid="stMetric"] { background: white; border: 1px solid #e1e9e5; padding: 20px 23px; border-radius: 15px; box-shadow: 0 4px 16px #18382a04; }
+[data-testid="stMetricLabel"] { color: #6b8079; font-size: 12px; }
+[data-testid="stMetricValue"] { color: #173d35; font-size: 29px; letter-spacing: -1px; }
+[data-testid="stCaptionContainer"] p { color: #52675f; }
+[data-baseweb="tab-list"] { overflow-x: auto; gap: 27px; border-bottom: 1px solid #dce6e0; margin: 20px 0; }
+[data-baseweb="tab"] { padding: 10px 0 14px; color: #74847f; font-size: 13px; }
+[aria-selected="true"][data-baseweb="tab"] { color: #17745f; font-weight: 650; }
+[data-baseweb="tab-highlight"] { background: #17745f; height: 3px; }
+[data-testid="stVerticalBlockBorderWrapper"] > div { border-radius: 17px !important; border-color: #e0e8e3 !important; background: #fff; }
+[data-testid="stVegaLiteChart"] { background: white; border-radius: 13px; padding: 8px; }
+[data-testid="stBaseButton-primary"] { background: #16785f; border-color: #16785f; border-radius: 9px; }
+[data-testid="stBaseButton-secondary"], [data-testid="stDownloadButton"] button { border-radius: 9px; }
+[data-testid="stAlert"] { border-radius: 12px; }
+
+/* --- Topline Navigation Bar --- */
+.topline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1.2rem;
+    background: #0f2522;
+    color: #9dc1b5;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+.status-pill {
+    background: rgba(36, 141, 112, 0.15);
+    color: #4ade80;
+    padding: 0.35rem 0.8rem;
+    border-radius: 99px;
+    border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+/* --- Cosmic Hero Section --- */
+.cosmic-hero {
+    position: relative;
+    background-color: #0d1f1c;
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
+    border-radius: 16px;
+    padding: 5rem 2rem;
+    text-align: center;
+    color: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+}
+.cosmic-hero h1 {
+    font-size: 3.2rem;
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 1.5rem 0;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+}
+.cosmic-hero p {
+    font-size: 1.15rem;
+    color: #bad0c4;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+.cosmic-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #dfa94d;
+    text-transform: uppercase;
+}
+.cosmic-footer {
+    margin-top: 3.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: #87aaa0;
+}
+
+/* --- Secondary Hero Section --- */
+.hero {
+    position: relative;
+    background: linear-gradient(135deg, #14393e 0%, #0d1f1c 100%);
+    border-radius: 16px;
+    padding: 3.5rem;
+    color: white;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+}
+.hero .eyebrow {
+    color: #dfa94d;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+}
+.hero h2 {
+    font-size: 2.75rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1.2rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+.hero p {
+    color: #bad0c4;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 65%;
+}
+.hero-art {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 320px;
+    height: auto;
+    opacity: 0.95;
+    pointer-events: none;
+}
+
+/* --- Sidebar Styling --- */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #248d70;
+    margin-bottom: 2.5rem;
+    letter-spacing: -0.02em;
+}
+.brand-icon {
+    font-size: 2.2rem;
+    color: #dfa94d;
+    line-height: 1;
+}
+.side-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #87aaa0;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 2rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(135, 170, 160, 0.2);
+}
+.side-foot {
+    margin-top: 4rem;
+    font-size: 0.75rem;
+    color: #6a8c82;
+    text-align: center;
+    line-height: 1.6;
+    background: rgba(0,0,0,0.02);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+/* --- Main Footer --- */
+.footer {
+    margin-top: 4.5rem;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+    border-top: 1px solid rgba(157, 193, 181, 0.2);
+    text-align: center;
+    font-size: 0.8rem;
+    color: #87aaa0;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+}
+
+/* Keep the supplied desktop design usable on phones and narrow panels. */
+@media (max-width: 760px) {
+    .block-container { padding-left: 1rem; padding-right: 1rem; }
+    .topline { flex-wrap: wrap; gap: .75rem; padding: .8rem 1rem; font-size: .65rem; }
+    .cosmic-hero { padding: 3.2rem 1.2rem; background-position: 60% center; }
+    .cosmic-hero h1 { font-size: clamp(1.8rem, 7.5vw, 2.6rem); overflow-wrap: break-word; }
+    .cosmic-hero p { font-size: .95rem; }
+    .cosmic-footer { margin-top: 2.4rem; font-size: .65rem; }
+    .hero { padding: 2rem 1.5rem; }
+    .hero h2 { font-size: 2rem; }
+    .hero p { max-width: 100%; font-size: 1rem; }
+    .hero-art { display: none; }
+    [data-baseweb="tab-list"] { gap: 14px; }
+    [data-testid="stMetricValue"] { font-size: 24px; }
+}
+
+
+/* Screenshot-matched green and gold dashboard. */
+.block-container { padding:1rem 2rem 3rem; max-width:1600px; }
+[data-testid="stSidebar"] { background:linear-gradient(120deg,#0a292b,#10383a); }
+.brand { color:#f5ffff; margin-bottom:2.1rem; font-size:1.9rem; }
+.brand-icon { color:#e6ac29; }
+.topline { background:transparent; box-shadow:none; color:#6c818a; padding:.6rem 0; margin-bottom:1rem; text-transform:none; letter-spacing:0; font-size:.9rem; }
+.status-pill { background:transparent; border:0; color:#243e48; }
+.cosmic-hero { text-align:left; padding:2.1rem 2.5rem; min-height:260px; margin-bottom:1.3rem; background-color:#143234; background-blend-mode:normal; box-shadow:0 8px 22px #173d3510; border-radius:15px; }
+.cosmic-hero h1 { font-size:clamp(2rem,3.4vw,3.2rem); margin:.7rem 0; max-width:650px; }
+.cosmic-hero p { margin:0; font-size:1rem; color:#d2e3df; }
+.cosmic-footer { display:inline-block; border:1px solid #9dc1b52b; border-radius:30px; padding:.5rem .8rem; margin-top:1rem; font-size:.65rem; }
+[data-testid="stMetric"] { background:#ffffff80; padding:22px; box-shadow:none; min-height:125px; }
+[data-testid="stMetricValue"] { color:#071f24; font-size:32px; font-weight:700; }
+[data-testid="stBaseButton-primary"] { background:linear-gradient(130deg,#ffe18a,#f3bb3f); border:1px solid #f4c75d; color:#162b26; font-weight:700; border-radius:15px; padding:.8rem 1.5rem; box-shadow:0 8px 25px #dfa94d20; }
+[data-testid="stSidebar"] .st-key-workspace_nav label { border-radius:10px; padding:.55rem; }
+[data-testid="stSidebar"] .st-key-workspace_nav label:has(input:checked) { background:#5caaa52b; border:1px solid #91d3c038; }
+@media(max-width:760px) { .block-container { padding:1rem; } .cosmic-hero { padding:1.5rem; } .cosmic-hero h1 { font-size:1.9rem; } }
+@media(prefers-reduced-motion:reduce) { * { transition:none !important; animation:none !important; } }
+
+.block-container { padding-top:3.2rem; }
+.cosmic-hero { min-height:230px; padding:1.8rem 2.5rem; }
+[data-testid="stSidebar"] .st-key-workspace_nav label { padding:.6rem; border-radius:9px; }
+[data-testid="stSidebar"] .st-key-workspace_nav label:has(input:checked) { background:#5caaa52b; border:1px solid #91d3c038; }

@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: solarscope
+    runtime: docker
+    plan: starter
+    healthCheckPath: /_stcore/health
+    envVars:
+      - key: ACCUWEATHER_API_KEY
+        sync: false
