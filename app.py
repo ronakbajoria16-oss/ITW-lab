@@ -25,11 +25,6 @@ if asset.exists():
     <div class="cosmic-label">SOLARSCOPE &nbsp; / &nbsp; GROUP 8</div><h1>A new perspective<br>on solar energy.</h1>
     <p>From the sun’s first light to tomorrow’s forecast.<br>Explore, compare, and understand your energy.</p>
     <div class="cosmic-footer">DATA &nbsp; · &nbsp; INSIGHT &nbsp; · &nbsp; FORECAST</div></section>''', unsafe_allow_html=True)
-from accuweather import weather_panel
-with st.container(border=True):
-    weather_panel()
-st.divider()
-st.subheader('Explore plant data and train forecasting models')
 with st.sidebar:
     st.markdown('<div class="brand"><span class="brand-icon">☼</span>SolarScope</div><div class="side-label">Plant workspace</div>', unsafe_allow_html=True)
     page = st.radio('Workspace navigation', ['Overview','Forecast','Data','Report'], label_visibility='collapsed',key='workspace_nav')
@@ -41,6 +36,14 @@ with st.sidebar:
     hours = st.select_slider('Forecast horizon (hours)', [24,48,72,168], value=24)
     st.download_button('Download sample history', demo_data().to_csv(index=False), 'sample_history.csv','text/csv')
     st.markdown('<div class="side-foot">GROUP 8 · SOLAR ENERGY PROJECT<br>Analyze. Compare. Forecast.</div>', unsafe_allow_html=True)
+
+st.header({'Overview':'Plant performance overview','Forecast':'Forecast your solar generation','Data':'Manage your plant data','Report':'Your solar energy report'}[page])
+st.caption({'Overview':'Explore generation trends and the effect of weather.','Forecast':'Use city weather for an estimate, or train a model with plant history.','Data':'Select a source in the sidebar, inspect your records, and download data.','Report':'Read and download a report based on your current dataset and model results.'}[page])
+if page == 'Forecast':
+    from accuweather import weather_panel
+    with st.container(border=True):
+        weather_panel()
+    st.divider()
 
 source_description = source
 try:
@@ -114,15 +117,15 @@ fingerprint = hashlib.sha256((df.to_csv(index=False)+source_description).encode(
 if st.session_state.get('data_key') != fingerprint:
     st.session_state.pop('comparison',None)
     st.session_state.data_key = fingerprint
-cols = st.columns(3)
-cols[0].metric('Observed energy',f'{df.power_kw.sum():,.0f} kWh')
-cols[1].metric('Peak generation',f'{df.power_kw.max():.1f} kW')
-cols[2].metric('Average daily energy',f'{df.power_kw.sum()/(len(df)/24):,.0f} kWh')
+if page == 'Overview':
+    cols = st.columns(3)
+    cols[0].metric('Observed energy',f'{df.power_kw.sum():,.0f} kWh')
+    cols[1].metric('Peak generation',f'{df.power_kw.max():.1f} kW')
+    cols[2].metric('Average daily energy',f'{df.power_kw.sum()/(len(df)/24):,.0f} kWh')
+    
+    st.caption('Hourly mean kW × 1 hour gives kWh. Missing hours are excluded; daily averages divide by the full calendar span and may underestimate yield when coverage is incomplete.')
 
-st.caption('Hourly mean kW × 1 hour gives kWh. Missing hours are excluded; daily averages divide by the full calendar span and may underestimate yield when coverage is incomplete.')
-analysis,modeling,forecasting,data,capacity,report = st.tabs(['Generation & weather','Train & evaluate','Forecast','Data & exports','State capacity','Project report'], default={'Overview':'Generation & weather','Forecast':'Forecast','Data':'Data & exports','Report':'Project report'}[page])
-
-with analysis:
+if page == 'Overview':
     with st.container(border=True):
         title_col,filter_col = st.columns([4,1])
         title_col.subheader('Power generation')
@@ -165,7 +168,7 @@ with analysis:
         st.bar_chart(cloud.groupby('Cloud cover').power_kw.mean(),color='#408e9b')
         st.caption('These associations may be confounded by time of day, season, and irradiance.')
 
-with modeling:
+if page == 'Forecast':
     st.subheader('Compare forecasting models')
     st.write('Compare a linear baseline, tree models, and optional neural models. Earliest 70% of usable rows: training. Next 15%: validation and model selection. Final 15%: held-out test.')
     names = st.multiselect('Models',['Linear Regression','Random Forest','XGBoost','TensorFlow Dense','TensorFlow LSTM'],default=['Linear Regression','Random Forest','XGBoost'])
@@ -190,13 +193,13 @@ with modeling:
             st.subheader(name+' · learning curves')
             st.line_chart(loss.rename(columns={'loss':'Training','val_loss':'Validation'}))
 
-with forecasting:
+if page == 'Forecast':
     st.subheader('Future power generation')
     result = st.session_state.get('comparison')
     scenario = future_scenario(df,hours)
     st.download_button('Download future weather template',scenario.to_csv(index=False),'future_weather_template.csv','text/csv')
     if result is None:
-        st.info('Train a model in Train & evaluate to unlock forecasts and weather-input predictions.')
+        st.info('Choose models above and click Train selected models to unlock predictions from your plant history. City weather estimates are available at the top of this page.')
     else:
         choice = st.selectbox('Forecast model',list(result['bundles']),index=list(result['bundles']).index(result['best']))
         bundle = result['bundles'][choice]
@@ -231,7 +234,7 @@ with forecasting:
                 except Exception as error:
                     st.error(str(error))
 
-with data:
+if page == 'Data':
     st.subheader('Cleaned data & traceability')
     st.json(cleaning)
     st.caption('Complete hourly means. Missing power remains missing. Weather forward-fill is limited to two hours. Night-time rows are preserved in the calendar series.')
@@ -249,7 +252,7 @@ with data:
             except Exception as error:
                 st.error(f'Could not export: {error}')
 
-with capacity:
+if page == 'Data':
     st.subheader('State-wise renewable capacity')
     st.write('Compare sourced installed solar, wind, and other renewable capacity. Capacity (MW) is separate from plant energy (kWh) and is not a model input.')
     left,right = st.columns(2)
@@ -270,7 +273,7 @@ with capacity:
     else:
         st.info('Upload sourced state figures to generate a comparison. No fabricated capacity values are prefilled.')
 
-with report:
+if page == 'Report':
     st.subheader('Your project report')
     st.caption('All requested sections, with current data, cleaning summary, measured results, limitations, and references.')
     document = report_markdown(df,st.session_state.get('comparison'),source_description,cleaning)
