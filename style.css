@@ -245,3 +245,10 @@ h3 { font-size: 1.2rem !important; }
 .cosmic-hero { min-height:230px; padding:1.8rem 2.5rem; }
 [data-testid="stSidebar"] .st-key-workspace_nav label { padding:.6rem; border-radius:9px; }
 [data-testid="stSidebar"] .st-key-workspace_nav label:has(input:checked) { background:#5caaa52b; border:1px solid #91d3c038; }
+
+/* Ensure form contrast regardless of visitor browser dark preference. */
+.stApp [data-testid="stWidgetLabel"] p { color:#243e48 !important; }
+.stApp [data-testid="stBaseButton-secondary"] { background:#fff; color:#183b34; border-color:#b6cbc4; }
+.stApp [data-baseweb="input"], .stApp [data-baseweb="select"] > div { background:#fff; color:#183b34; }
+.stApp input { color:#183b34; }
+[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p { color:#e2eeeb !important; }

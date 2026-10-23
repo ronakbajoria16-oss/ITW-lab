@@ -40,7 +40,10 @@ def weather_panel():
     if st.button('Find location',type='primary'):
         if not key: st.info('Enter an API key to continue.')
         else:
-            try: st.session_state.weather_places=get_weather('/locations/v1/cities/search',key,q=city)
+            try:
+                st.session_state.pop('weather_result',None)
+                st.session_state.weather_places=get_weather('/locations/v1/cities/search',key,q=city)
+                if not st.session_state.weather_places: st.warning('No matching city found. Try adding the country name.')
             except ValueError as e: st.error(str(e))
     places=st.session_state.get('weather_places',[])
     if not places:
@@ -52,7 +55,11 @@ def weather_panel():
     performance=b.slider('System performance (%)',50,100,80,help='Allows for inverter, wiring, shading and other losses.')/100
     if st.button('Load available weather'):
         try:
-            rows=get_weather('/forecasts/v1/hourly/12hour/'+place['Key'],key,details='true',metric='true')
+            try:
+                rows=get_weather('/forecasts/v1/hourly/24hour/'+place['Key'],key,details='true',metric='true')
+            except ValueError as error:
+                if 'subscription' not in str(error): raise
+                rows=get_weather('/forecasts/v1/hourly/12hour/'+place['Key'],key,details='true',metric='true')
             st.session_state.weather_result=(place['Key'],rows)
         except ValueError as e: st.error(str(e))
     saved=st.session_state.get('weather_result')
