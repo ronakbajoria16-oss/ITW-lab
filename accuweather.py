@@ -67,9 +67,14 @@ def weather_panel():
     try:
         df=solar_estimate(saved[1],place['GeoPosition']['Latitude'],capacity,performance)
         days=list(dict.fromkeys(t.date() for t in df['Local time']))
-        day=st.selectbox('Date to analyse',days,format_func=lambda d:d.strftime('%A, %d %B %Y'))
-        selected=df[df['Local time'].map(lambda t:t.date()==day)]
-        st.caption('AccuWeather · next 12 hourly forecasts · local time at your selected city. Only dates supplied by the API can be selected.')
+        day=st.selectbox('Period to analyse',['All available hours']+days,format_func=lambda d:d if isinstance(d,str) else d.strftime('%A, %d %B %Y'))
+        selected=df if isinstance(day,str) else df[df['Local time'].map(lambda t:t.date()==day)]
+        st.caption(f'AccuWeather: {len(df)} forecast hours available. Times are local to your city.')
+        st.write('Coverage: '+selected['Local time'].iloc[0].strftime('%d %b %H:%M')+' to '+selected['Local time'].iloc[-1].strftime('%d %b %H:%M'))
+        if not (selected['Estimated radiation (W/m²)']>0).any():
+            st.warning('These hours are nighttime: zero solar generation is expected. Choose All available hours or a date with daylight.')
+        if len(selected)<24:
+            st.info('Partial forecast: energy is for available hours only, not a full-day total.')
         a,b,c=st.columns(3)
         a.metric('Energy in available hours',f"{selected['Estimated power (kW)'].sum():.1f} kWh")
         b.metric('Peak estimated output',f"{selected['Estimated power (kW)'].max():.1f} kW")
